@@ -13,59 +13,66 @@ for num in nums:
 
 shuffle(card_deck)
 
-players = {f'player_{i+1}': [] for i in range(3)}
+##getting number of players from user (between 3 and 8)
 
-player_state = {f'player_{i+1}': False for i in range(3)}
-player_state['player_1']
-
-final_copy = card_deck.copy()
-for i in range(30):
-    if player_state['player_1'] == False: 
-        if final_copy[0] not in players['player_1']:
-            players['player_1'].append(final_copy[0])
-            # print("one:", player1)        
-        else:
-            print("Game over for player one:", final_copy[0])
-            player_state['player_1'] = True
-            final_copy.pop(0)
-            continue
-    else:
-        pass
-
-    final_copy.pop(0)
-
-    if player_state['player_2'] == False:
-        if final_copy[0] not in players['player_2']:
-            players['player_2'].append(final_copy[0])
-            # print("two:", player2)        
-        else:
-            print("Game over for player two:", final_copy[0])
-            player_state['player_2'] = True
-            final_copy.pop(0)
-            continue
-    else:
-        pass
-
-    final_copy.pop(0)
-
-    if player_state['player_3'] == False:
-        if final_copy[0] not in players['player_3']:
-            players['player_3'].append(final_copy[0])
-            # print("three:", player3)        
-        else:
-            print("Game over for player three:", final_copy[0])
-            player_state['player_3'] = True
-            final_copy.pop(0)
-            continue
-    else:
-        pass
-    
-    final_copy.pop(0)
-    
-    if player_state['player_1'] == True & player_state['player_2'] == True & player_state['player_3'] == True:
-        print("GAME OVER")
+while True:
+  try:
+    num_players = input("Enter a number between 3 and 8: ")
+    if num_players.isdigit():
+       num_players=int(num_players)
+    else:   
+       raise ValueError()
+    if 3 <= num_players <= 8:
         break
+    raise ValueError()
+  except ValueError:
+    print("Input must be an integer between 3 and 8.")
+
+
+players = {f'player_{i+1}': [] for i in range(num_players)}
+
+player_state = {f'player_{i+1}': False for i in range(num_players)}
+
+def give_card(deck, player_num):
+    if player_state[player_num] == False: 
+        if deck[0] not in players[player_num]:
+            players[player_num].append(deck[0])
+        else:
+            print(f"Game over for {player_num}, repeated card:", deck[0])
+            player_state[player_num] = True
+            deck.pop(0)
+            return deck
     
-print("one:", players['player_1'])
-print("two:", players['player_2'])
-print("three:", players['player_3'])
+    deck.pop(0) 
+    return deck
+
+#Main game
+deck_copy = card_deck.copy()
+while len(deck_copy) > 0:
+    for player in sorted(list(players.keys())):
+        # print(player)
+        give_card(deck_copy, player)
+        if len(deck_copy) == 0: break
+
+    if all(player_state.values()) == True:
+        print("\nGAME OVER - All the players are out!")
+        break
+    elif len(deck_copy) == 0:
+        print("\nCARDS FINISHED - Game over!")
+        break
+
+#Results of the game
+print("\nFinal cards:")
+for player, cards in players.items():
+    print(f"{player}: {cards}")
+
+
+total_points = []
+for player, point in players.items():
+    points = sum(point)
+    total_points.append((points, player))
+
+winner = max(total_points)[1]
+winning_points = max(total_points)[0]
+print(f'Winner of the game is {winner} with {winning_points} points.')
+

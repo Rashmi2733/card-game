@@ -1,40 +1,32 @@
 import numpy as np
 from random import shuffle
 
-ones = 1 * [1]
-twos = 2 * [2]
-threes = 3 * [3]
-fours = 4 * [4]
-fives = 5 * [5]
-sixes = 6 * [6]
-sevens = 7 * [7]
-eights = 8 * [8]
-nines = 9 * [9]
-tens = 10 * [10]
-elevens = 11 * [11]
-twelves = 12 * [12]
+nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
-final = ones + twos + threes + fours + fives + sixes + sevens + eights + nines +tens+elevens+twelves
+def create_cards(num):
+    num_vals = num * [num]
+    return num_vals
 
-shuffle(final)
+card_deck = []
+for num in nums:
+    card_deck.extend(create_cards(num))
 
-player1 = []
-player2 = []
-player3 = []
+shuffle(card_deck)
 
-player1_end = False
-player2_end = False
-player3_end = False
+players = {f'player_{i+1}': [] for i in range(3)}
 
-final_copy = final.copy()
+player_state = {f'player_{i+1}': False for i in range(3)}
+player_state['player_1']
+
+final_copy = card_deck.copy()
 for i in range(30):
-    if player1_end == False: 
-        if final_copy[0] not in player1:
-            player1.append(final_copy[0])
+    if player_state['player_1'] == False: 
+        if final_copy[0] not in players['player_1']:
+            players['player_1'].append(final_copy[0])
             # print("one:", player1)        
         else:
             print("Game over for player one:", final_copy[0])
-            player1_end = True
+            player_state['player_1'] = True
             final_copy.pop(0)
             continue
     else:
@@ -42,13 +34,13 @@ for i in range(30):
 
     final_copy.pop(0)
 
-    if player2_end == False:
-        if final_copy[0] not in player2:
-            player2.append(final_copy[0])
+    if player_state['player_2'] == False:
+        if final_copy[0] not in players['player_2']:
+            players['player_2'].append(final_copy[0])
             # print("two:", player2)        
         else:
             print("Game over for player two:", final_copy[0])
-            player2_end = True
+            player_state['player_2'] = True
             final_copy.pop(0)
             continue
     else:
@@ -56,13 +48,13 @@ for i in range(30):
 
     final_copy.pop(0)
 
-    if player3_end == False:
-        if final_copy[0] not in player3:
-            player3.append(final_copy[0])
+    if player_state['player_3'] == False:
+        if final_copy[0] not in players['player_3']:
+            players['player_3'].append(final_copy[0])
             # print("three:", player3)        
         else:
             print("Game over for player three:", final_copy[0])
-            player3_end = True
+            player_state['player_3'] = True
             final_copy.pop(0)
             continue
     else:
@@ -70,10 +62,10 @@ for i in range(30):
     
     final_copy.pop(0)
     
-    if player1_end == True & player2_end == True & player3_end == True:
+    if player_state['player_1'] == True & player_state['player_2'] == True & player_state['player_3'] == True:
         print("GAME OVER")
         break
     
-print("one:", player1)
-print("two:", player2)
-print("three:", player3)
+print("one:", players['player_1'])
+print("two:", players['player_2'])
+print("three:", players['player_3'])
